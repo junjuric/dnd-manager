@@ -1,5 +1,7 @@
 package io.github.junjuric;
 import java.util.Scanner;
+import java.util.InputMismatchException;
+import java.util.List;
 public class Main 
 {
     private static void printInterface(){
@@ -21,15 +23,30 @@ public class Main
         printInterface();
         boolean isRunning = true;
         while(isRunning){
-            boolean flag = true;
                 switch (sc.nextLine()) {
                     case "1":
                         System.out.print("Введите название предмета: ");
                         String nameToAdd = sc.nextLine();
-
+                        double weight = 0;
+                        boolean correctInput = false;
                         System.out.print("Введите вес предмета: ");
-                        double weight = Double.parseDouble(sc.nextLine());
+                        while (!correctInput) {
+                            try {
+                                double inputWeight = sc.nextDouble();
+                                sc.nextLine();
+                                if (inputWeight < 0 || inputWeight > 100 || !Double.isFinite(inputWeight)) {
+                                    System.out.println("Некорректный вес. Введите число от 0 до 100: ");
+                                }
+                                else {
+                                    weight = inputWeight;
+                                    correctInput = true;
+                                }
 
+                            } catch (InputMismatchException e) {
+                                System.out.println("Введено неверное значение. Попробуйте ещё раз: ");
+                                sc.next();
+                            }
+                        }
                         ItemType[] itemTypePrint = ItemType.values();
                         System.out.print("Выберите тип предмета: ");
                         int i=1;
@@ -66,7 +83,6 @@ public class Main
                                 itemType = ItemType.ARTIFACTS;
                                 break;
                             default:
-                                flag = false;
                                 System.out.println("Введено неверное значение");
                                 printInterface();
                                 continue;
@@ -102,37 +118,57 @@ public class Main
                                 itemRare = ItemRare.ARTIFACT;
                                 break;
                             default:
-                                flag = false;
                                 System.out.println("Введено неверное значение");
                                 printInterface();
                                 continue;
                         }
-                        if(flag) {
-                            Item item = new Item(nameToAdd, itemRare, itemType, weight);
-                            inventory.addItem(item);
-                        }
+                        
+                        Item item = new Item(nameToAdd, itemRare, itemType, weight);
+                        inventory.addItem(item);
+                        
                         printInterface();
                         break;
                     case "2":
                         System.out.println("Введите название предмета");
                         String nameToDelete = sc.nextLine();
-                        inventory.removeItem(nameToDelete);
+                        if(inventory.removeItem(nameToDelete) == null){
+                            System.out.println("Предмет не найден");
+                        }
+                        else System.out.println("Предмет успешно удалён");
                         printInterface();
                         break;
                     case "3":
                         System.out.println("Введите название предмета");
                         String nameToSearch = sc.nextLine();
-                        inventory.searchItem(nameToSearch);
+                        Item itemSearch = inventory.searchItem(nameToSearch);
+                        if(itemSearch==null){
+                            System.out.println("Предмет не найден");
+                        }
+                        else{
+                            System.out.println("Такой предмет есть :)"+
+                            "\nВес: "+itemSearch.getWeight()+
+                            "\nТип: "+itemSearch.getType()+
+                            "\nРедкость: "+itemSearch.getRare()
+                            );
+                        }
                         printInterface();
                         break;
                     case "4":
                         System.out.println("Список предметов в инвентаре: ");
-                        inventory.printItems();
+                        List<Item> itemsForPrint = inventory.printItems();
+                        if(itemsForPrint.isEmpty()){
+                            System.out.println("Список пуст");
+                            continue;
+                        }
+                        System.out.print("Список предметов: ");
+                        for(Item itemForPrint: itemsForPrint){
+                            System.out.print(itemForPrint.getName()+"; ");
+                        }
                         printInterface();
                         break;
                     case "5":
                         System.out.println("Вес предметов в инвентаре: ");
-                        System.out.println(inventory.inventoryWeightCalcuation());
+                        System.out.println(inventory.inventoryWeightCalculation());
                         printInterface();
                         break;
                     case "0":

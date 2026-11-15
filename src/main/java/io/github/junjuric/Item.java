@@ -1,9 +1,9 @@
 package io.github.junjuric;
 public class Item {
-    private String name;
-    private ItemRare rare;
-    private ItemType type;
-    private double weight;
+    private final String name;
+    private final ItemRare rare;
+    private final ItemType type;
+    private final double weight;
     public Item (String name, ItemRare rare, ItemType type, double weight){
         this.name = name;
         this.rare = rare;

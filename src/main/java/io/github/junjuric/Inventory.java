@@ -1,51 +1,36 @@
 package io.github.junjuric;
 import java.util.ArrayList;
+import java.util.List;
 public class Inventory {
     private final ArrayList<Item> items = new ArrayList<>();
+    private Item findItem(String name){
+            for(Item a: items){
+                if(a.getName().equals(name)){
+                    return a;
+                }
+        }
+        return null;
+    }
     public void addItem(Item item){
         items.add(item);
     }
-    public void removeItem(String name){
+    public Item removeItem(String name){
         if(items.isEmpty()){
-            System.out.println("Список пуст");
-            return;
+            return null;
         }
-        for(Item a: items){
-            if(a.getName().equals(name)){
-                items.remove(a);
-                return;
-            }
-        }
-        System.out.println("Удалять нечего, такого предмета нет.");
+        items.remove(findItem(name));
+        return findItem(name);
     }
-    public void searchItem(String name){
+    public Item searchItem(String name){
         if(items.isEmpty()){
-            System.out.println("Список пуст");
-            return;
+            return null;
         }
-        for(Item a: items){
-            if(a.getName().equals(name)){
-                System.out.println("Такой предмет есть :)"+
-                    "\nВес: "+a.getWeight()+
-                    "\nТип: "+a.getType()+
-                    "\nРедкость: "+a.getRare()
-                );
-                return;
-            }
-        }
-        System.out.println("Такого предмета нет :(");
+        return findItem(name);
     }
-    public void printItems(){
-        if(items.isEmpty()){
-            System.out.println("Список пуст");
-            return;
-        }
-        System.out.print("Список предметов: ");
-        for(Item i: items){
-        System.out.print(i.getName()+"; ");
-        }
+    public List<Item> printItems(){
+        return List.copyOf(items);
     }
-    public double inventoryWeightCalcuation(){
+    public double inventoryWeightCalculation(){
         double sum = 0;
         for(Item a: items){
             sum+=a.getWeight();
