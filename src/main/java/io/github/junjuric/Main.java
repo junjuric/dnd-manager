@@ -1,9 +1,81 @@
 package io.github.junjuric;
 import java.util.Scanner;
-import java.util.InputMismatchException;
 import java.util.List;
 public class Main 
 {
+    private static String scanItemName(Scanner sc){
+        String name;
+        while(true){
+            try{
+                name = sc.nextLine();
+                if (name.equals("")) throw new Exception("Введено пустое поле. Пробуйте ещё раз.");
+                break; 
+            }
+            catch(Exception ex){
+                System.out.println("Ошибка: "+ ex.getMessage());
+                continue;
+            }
+        }
+        return name;
+    }
+    private static double scanItemWeight(Scanner sc){
+        double inputWeight;
+        while (true) {
+            try {
+                inputWeight = Double.parseDouble(sc.nextLine());
+                if (inputWeight < 0 || inputWeight > 100 || !Double.isFinite(inputWeight)) throw new Exception("Вес должен быть больше 0 и меньше 100");
+                break;
+            }
+            catch(NumberFormatException ex){
+                System.out.println("Ошибка: Введено не число. Попробуйте ещё раз:");
+                continue;
+            }
+            catch(Exception ex){
+                System.out.println("Ошибка: " + ex.getMessage()+". Попробуйте ещё раз:");
+                continue;
+            }
+        }
+        return inputWeight;
+    }
+    private static String scanItemType(Scanner sc){
+        String itemType;
+        while (true) {
+            try {
+                itemType = sc.nextLine();
+                if (Integer.parseInt(itemType)<1 || Integer.parseInt(itemType) >8) throw new Exception("Введён несуществующий тип предмета. Попробуйте ещё раз: ");
+                break;
+            }
+            catch(NumberFormatException ex){
+                System.out.println("Ошибка: Введено не целое число. Попробуйте ещё раз:");
+                continue;
+            }
+            catch(Exception ex){
+                System.out.println("Ошибка: " + ex.getMessage()+". Попробуйте ещё раз:");
+                continue;
+            }
+        }
+        return itemType;
+    }
+    private static String scanItemRare(Scanner sc){
+        String itemRare;
+        while (true) {
+            try {
+                itemRare = sc.nextLine();
+                if (Integer.parseInt(itemRare)<1 || Integer.parseInt(itemRare) >6) throw new Exception("Введён несуществующий тип предмета.");
+                break;
+            }
+            catch(NumberFormatException ex){
+                System.out.println("Ошибка: Введено не целое число. Попробуйте ещё раз:");
+                continue;
+            }
+            catch(Exception ex){
+                System.out.println("Ошибка: " + ex.getMessage()+". Попробуйте ещё раз:");
+                continue;
+            }
+        }
+        return itemRare;
+    }
+    
     private static void printInterface(){
         System.out.println("\nИНВЕНТАРЬ\n" + 
                         "\n" + 
@@ -26,27 +98,9 @@ public class Main
                 switch (sc.nextLine()) {
                     case "1":
                         System.out.print("Введите название предмета: ");
-                        String nameToAdd = sc.nextLine();
-                        double weight = 0;
-                        boolean correctInput = false;
+                        String nameToAdd = scanItemName(sc);
                         System.out.print("Введите вес предмета: ");
-                        while (!correctInput) {
-                            try {
-                                double inputWeight = sc.nextDouble();
-                                sc.nextLine();
-                                if (inputWeight < 0 || inputWeight > 100 || !Double.isFinite(inputWeight)) {
-                                    System.out.println("Некорректный вес. Введите число от 0 до 100: ");
-                                }
-                                else {
-                                    weight = inputWeight;
-                                    correctInput = true;
-                                }
-
-                            } catch (InputMismatchException e) {
-                                System.out.println("Введено неверное значение. Попробуйте ещё раз: ");
-                                sc.next();
-                            }
-                        }
+                        double weight = scanItemWeight(sc);
                         ItemType[] itemTypePrint = ItemType.values();
                         System.out.print("Выберите тип предмета: ");
                         int i=1;
@@ -55,31 +109,31 @@ public class Main
                             i++;
                         }
                         System.out.println(": ");
-                        String typeName = sc.nextLine();
+                        String typeName = scanItemType(sc);
                         ItemType itemType = ItemType.WONDROUS_ITEMS;
                         switch (typeName) {
-                            case "ARMOR", "1":
+                            case "1":
                                 itemType = ItemType.ARMOR;
                                 break;
-                            case "WEAPONS", "2":
+                            case "2":
                                 itemType = ItemType.WEAPONS;
                                 break;
-                            case "POTIONS", "3":
+                            case "3":
                                 itemType = ItemType.POTIONS;
                                 break;
-                            case "SCROLLS", "4":
+                            case "4":
                                 itemType = ItemType.SCROLLS;
                                 break;
-                            case "RINGS", "5":
+                            case "5":
                                 itemType = ItemType.RINGS;
                                 break;
-                            case "MAGICIANS_WEAPONS", "6":
+                            case "6":
                                 itemType = ItemType.MAGICIANS_WEAPONS;
                                 break;
-                            case "WONDROUS_ITEMS", "7":
+                            case "7":
                                 itemType = ItemType.WONDROUS_ITEMS;
                                 break;
-                            case "ARTIFACTS", "8":
+                            case "8":
                                 itemType = ItemType.ARTIFACTS;
                                 break;
                             default:
@@ -96,25 +150,25 @@ public class Main
                             j++;
                         }
                         System.out.println(": ");
-                        String rareName = sc.nextLine();
+                        String rareName = scanItemRare(sc);
                         ItemRare itemRare = ItemRare.COMMON;
                         switch (rareName) {
-                            case "COMMON", "1":
+                            case "1":
                                 itemRare = ItemRare.COMMON;
                                 break;
-                            case "UNCOMMON", "2":
+                            case "2":
                                 itemRare = ItemRare.UNCOMMON;
                                 break;
-                            case "RARE", "3":
+                            case "3":
                                 itemRare = ItemRare.RARE;
                                 break;
-                            case "VERY_RARE", "4":
+                            case "4":
                                 itemRare = ItemRare.VERY_RARE;
                                 break;
-                            case "LEGENDARY", "5":
+                            case "5":
                                 itemRare = ItemRare.LEGENDARY;
                                 break;
-                            case "ARTIFACT", "6":
+                            case "6":
                                 itemRare = ItemRare.ARTIFACT;
                                 break;
                             default:
@@ -158,6 +212,7 @@ public class Main
                         List<Item> itemsForPrint = inventory.printItems();
                         if(itemsForPrint.isEmpty()){
                             System.out.println("Список пуст");
+                            printInterface();
                             continue;
                         }
                         System.out.print("Список предметов: ");

@@ -15,16 +15,11 @@ public class Inventory {
         items.add(item);
     }
     public Item removeItem(String name){
-        if(items.isEmpty()){
-            return null;
-        }
-        items.remove(findItem(name));
-        return findItem(name);
+        Item item = findItem(name);
+        items.remove(item);
+        return item;
     }
     public Item searchItem(String name){
-        if(items.isEmpty()){
-            return null;
-        }
         return findItem(name);
     }
     public List<Item> printItems(){
