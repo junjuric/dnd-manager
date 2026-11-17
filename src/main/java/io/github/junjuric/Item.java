@@ -6,10 +6,10 @@ public class Item {
     private final double weight;
     public Item (String name, ItemRare rare, ItemType type, double weight){
         if (name == null || name.isBlank()) throw new IllegalArgumentException("Название не может быть пустым");
-        if (weight < 0 || weight > 100 || !Double.isFinite(weight)) throw new IllegalArgumentException("Вес должен быть больше 0 и меньше 100");
+        if (weight <= 0 || weight >= 100 || !Double.isFinite(weight)) throw new IllegalArgumentException("Вес должен быть больше 0 и меньше 100");
         if (type == null) throw new IllegalArgumentException("Тип предмета не должен быть null");
         if (rare == null) throw new IllegalArgumentException("Редкость предмета не должна быть null");
-        this.name = name;
+        this.name = name.trim();
         this.rare = rare;
         this.type = type;
         this.weight = weight;

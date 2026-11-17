@@ -5,14 +5,16 @@ public class Inventory {
     private final ArrayList<Item> items = new ArrayList<>();
     private Item findItem(String name){
             for(Item a: items){
-                if(a.getName().equals(name)){
+                if(a.getName().equalsIgnoreCase(name)){
                     return a;
                 }
         }
         return null;
     }
-    public void addItem(Item item){
+    public int addItem(Item item){
+        if (item == null) return 0;
         items.add(item);
+        return 1;
     }
     public Item removeItem(String name){
         Item item = findItem(name);
@@ -22,7 +24,7 @@ public class Inventory {
     public Item searchItem(String name){
         return findItem(name);
     }
-    public List<Item> printItems(){
+    public List<Item> getItems(){
         return List.copyOf(items);
     }
     public double inventoryWeightCalculation(){

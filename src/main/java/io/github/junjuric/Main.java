@@ -6,74 +6,67 @@ public class Main
     private static String scanItemName(Scanner sc){
         String name;
         while(true){
-            try{
-                name = sc.nextLine();
-                if (name.equals("")) throw new Exception("Введено пустое поле. Пробуйте ещё раз.");
-                break; 
+            name = sc.nextLine().trim();
+            if (!name.isBlank()) {
+                return name;
             }
-            catch(Exception ex){
-                System.out.println("Ошибка: "+ ex.getMessage());
-                continue;
-            }
+            System.out.println("Название не может быть пустым. Попробуйте ещё раз:");
         }
-        return name;
     }
     private static double scanItemWeight(Scanner sc){
         double inputWeight;
         while (true) {
             try {
                 inputWeight = Double.parseDouble(sc.nextLine());
-                if (inputWeight < 0 || inputWeight > 100 || !Double.isFinite(inputWeight)) throw new Exception("Вес должен быть больше 0 и меньше 100");
-                break;
+                
             }
             catch(NumberFormatException ex){
                 System.out.println("Ошибка: Введено не число. Попробуйте ещё раз:");
                 continue;
             }
-            catch(Exception ex){
-                System.out.println("Ошибка: " + ex.getMessage()+". Попробуйте ещё раз:");
+            if (inputWeight <= 0 || inputWeight >= 100 || !Double.isFinite(inputWeight)){
+                System.out.println("Вес должен быть больше 0 и меньше 100");
                 continue;
             }
+            else break;
         }
         return inputWeight;
     }
     private static String scanItemType(Scanner sc){
-        String itemType;
+        int inputType;
         while (true) {
             try {
-                itemType = sc.nextLine();
-                if (Integer.parseInt(itemType)<1 || Integer.parseInt(itemType) >8) throw new Exception("Введён несуществующий тип предмета. Попробуйте ещё раз: ");
-                break;
+                inputType = Integer.parseInt(sc.nextLine());
             }
             catch(NumberFormatException ex){
-                System.out.println("Ошибка: Введено не целое число. Попробуйте ещё раз:");
+                System.out.println("Ошибка: Неверный ввод. Попробуйте ещё раз:");
                 continue;
             }
-            catch(Exception ex){
-                System.out.println("Ошибка: " + ex.getMessage()+". Попробуйте ещё раз:");
+            if (inputType <1 || inputType >8 || !Double.isFinite(inputType)){
+                System.out.println("Введите цифру от 1 до 8");
                 continue;
             }
+            else break;
         }
-        return itemType;
+        return String.valueOf(inputType);
     }
     private static String scanItemRare(Scanner sc){
-        String itemRare;
+        int inputRare;
         while (true) {
             try {
-                itemRare = sc.nextLine();
-                if (Integer.parseInt(itemRare)<1 || Integer.parseInt(itemRare) >6) throw new Exception("Введён несуществующий тип предмета.");
-                break;
+                inputRare = Integer.parseInt(sc.nextLine());
             }
             catch(NumberFormatException ex){
-                System.out.println("Ошибка: Введено не целое число. Попробуйте ещё раз:");
+                System.out.println("Ошибка: Неверный ввод. Попробуйте ещё раз:");
                 continue;
             }
-            catch(Exception ex){
-                System.out.println("Ошибка: " + ex.getMessage()+". Попробуйте ещё раз:");
+            if (inputRare <1 || inputRare >6 || !Double.isFinite(inputRare)){
+                System.out.println("Введите цифру от 1 до 6");
                 continue;
             }
+            else break;
         }
-        return itemRare;
+        return String.valueOf(inputRare);
     }
     
     private static void printInterface(){
@@ -178,13 +171,16 @@ public class Main
                         }
                         
                         Item item = new Item(nameToAdd, itemRare, itemType, weight);
-                        inventory.addItem(item);
-                        
+                        if(inventory.addItem(item) == 0){ 
+                            System.out.println("Предмет не добавлен. Попробуйте ещё раз");
+                            printInterface();
+                            continue;
+                        }
                         printInterface();
                         break;
                     case "2":
                         System.out.println("Введите название предмета");
-                        String nameToDelete = sc.nextLine();
+                        String nameToDelete = scanItemName(sc);
                         if(inventory.removeItem(nameToDelete) == null){
                             System.out.println("Предмет не найден");
                         }
@@ -193,7 +189,7 @@ public class Main
                         break;
                     case "3":
                         System.out.println("Введите название предмета");
-                        String nameToSearch = sc.nextLine();
+                        String nameToSearch = scanItemName(sc);
                         Item itemSearch = inventory.searchItem(nameToSearch);
                         if(itemSearch==null){
                             System.out.println("Предмет не найден");
@@ -209,7 +205,7 @@ public class Main
                         break;
                     case "4":
                         System.out.println("Список предметов в инвентаре: ");
-                        List<Item> itemsForPrint = inventory.printItems();
+                        List<Item> itemsForPrint = inventory.getItems();
                         if(itemsForPrint.isEmpty()){
                             System.out.println("Список пуст");
                             printInterface();
